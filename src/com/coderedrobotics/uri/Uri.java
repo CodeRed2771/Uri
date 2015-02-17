@@ -2,8 +2,6 @@ package com.coderedrobotics.uri;
 
 import com.coderedrobotics.libs.ControlsBoxLEDs;
 import com.coderedrobotics.libs.Drive;
-import com.coderedrobotics.libs.HID.HID;
-import com.coderedrobotics.libs.HID.LogitechF310;
 import com.coderedrobotics.libs.MechanumDrive;
 import com.coderedrobotics.libs.PWMController;
 import com.coderedrobotics.uri.statics.KeyMap;
