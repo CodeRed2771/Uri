@@ -1,5 +1,0 @@
-# Project specific information
-package=com.coderedrobotics.uri
-robot.class=${package}.Uri
-simulation.world.file=/usr/share/frcsim/worlds/GearsBotDemo.world
-classpath=/Users/Michael/wpilib/java/current/lib/WPILib.jar:/Users/Michael/wpilib/java/current/lib/NetworkTables.jar:/Users/Michael/Dropbox/NetbeansProjects/CodeRedRobotics/Robots/RobotLibrary/dist/RobotLibrary.jar
