@@ -29,6 +29,7 @@ public class KeyMap {
     private final Axis liftAxis = LogitechF310.STICK_RIGHT_Y;
     private final Button reverseDriveButton = LogitechF310.BUMPER_LEFT;
     private final Button singleControllerModeButton = LogitechF310.STICK_RIGHT;
+    private final Button slowButton = LogitechF310.BUMPER_RIGHT;
     
     // CONTROLLER 2
     
@@ -56,7 +57,7 @@ public class KeyMap {
     }
     
     public boolean getReverseDriveButton() {
-        return getHID(1).buttonPressed(reverseDriveButton, reverseDriveButtonState);
+        return getHID(gamepad1).buttonPressed(reverseDriveButton, reverseDriveButtonState);
     }
 
     public void toggleReverseDrive() {
@@ -80,7 +81,7 @@ public class KeyMap {
     }
     
     public boolean getSingleControllerToggleButton() {
-        return getHID(1).buttonPressed(singleControllerModeButton, singleControllerModeState);
+        return getHID(gamepad1).buttonPressed(singleControllerModeButton, singleControllerModeState);
     }
 
     public double getYDriveAxis() {
@@ -105,5 +106,9 @@ public class KeyMap {
     
     public double getLiftAxis() {
         return getHID(gamepad1).axis(liftAxis);
+    }
+    
+    public boolean getSlowButton() {
+        return getHID(gamepad1).button(slowButton);
     }
 }

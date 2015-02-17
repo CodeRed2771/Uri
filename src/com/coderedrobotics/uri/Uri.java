@@ -19,7 +19,7 @@ public class Uri extends IterativeRobot {
     Drive mechanum;
     KeyMap keyMap;
     ControlsBoxLEDs leds;
-    PWMController lift;
+    Lift lift;
     
     @Override
     public void robotInit() {
@@ -29,7 +29,7 @@ public class Uri extends IterativeRobot {
                 new PWMController(Wiring.REAR_RIGHT_MOTOR, true));
         keyMap = new KeyMap();
         leds = new ControlsBoxLEDs(Wiring.RED_AND_GREEN_LEDS, Wiring.BLUE_LEDS);
-        lift = new PWMController(Wiring.LIFT_MOTOR, true);
+        lift = new Lift(new PWMController(Wiring.LIFT_MOTOR, false));
     }
     
     @Override
@@ -49,9 +49,21 @@ public class Uri extends IterativeRobot {
 
     @Override
     public void teleopPeriodic() {
-        mechanum.setXYRot(keyMap.getXDriveAxis(), -keyMap.getYDriveAxis(), 
-                keyMap.getRotDriveAxis());
+        double gear = 1;
+        if (keyMap.getSlowButton()) {
+            gear = .3;
+        }
+        
+        mechanum.setXYRot(keyMap.getXDriveAxis() * gear, -keyMap.getYDriveAxis() * gear, 
+                keyMap.getRotDriveAxis() * gear);
         lift.set(-keyMap.getLiftAxis());
+        
+        if (keyMap.getReverseDriveButton()) {
+            keyMap.toggleReverseDrive();
+        }
+        if (keyMap.getSingleControllerToggleButton()) {
+            keyMap.toggleSingleControllerMode();
+        }
     }
 
     @Override
