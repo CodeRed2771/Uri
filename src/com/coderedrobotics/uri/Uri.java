@@ -8,6 +8,7 @@ import com.coderedrobotics.libs.MechanumDrive;
 import com.coderedrobotics.libs.PWMController;
 import com.coderedrobotics.uri.statics.KeyMap;
 import com.coderedrobotics.uri.statics.Wiring;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -20,18 +21,18 @@ public class Uri extends IterativeRobot {
     KeyMap keyMap;
     ControlsBoxLEDs leds;
     PWMController lift;
-    
+
     @Override
     public void robotInit() {
-        mechanum = new MechanumDrive(new PWMController(Wiring.FRONT_LEFT_MOTOR, false), 
-                new PWMController(Wiring.FRONT_RIGHT_MOTOR, true), 
+        mechanum = new MechanumDrive(new PWMController(Wiring.FRONT_LEFT_MOTOR, false),
+                new PWMController(Wiring.FRONT_RIGHT_MOTOR, true),
                 new PWMController(Wiring.REAR_LEFT_MOTOR, false),
                 new PWMController(Wiring.REAR_RIGHT_MOTOR, true));
         keyMap = new KeyMap();
         leds = new ControlsBoxLEDs(Wiring.RED_AND_GREEN_LEDS, Wiring.BLUE_LEDS);
         lift = new PWMController(Wiring.LIFT_MOTOR, false);
     }
-    
+
     @Override
     public void autonomousInit() {
         leds.activateAutonomous();
@@ -39,7 +40,7 @@ public class Uri extends IterativeRobot {
 
     @Override
     public void autonomousPeriodic() {
-        
+
     }
 
     @Override
@@ -49,11 +50,11 @@ public class Uri extends IterativeRobot {
 
     @Override
     public void teleopPeriodic() {
-    	double x = keyMap.getXDriveAxis();
-    	double y = keyMap.getYDriveAxis();
-    	double rot = keyMap.getRotDriveAxis();
-    	
-        mechanum.setXYRot(x, y, 
+        double x = keyMap.getXDriveAxis();
+        double y = keyMap.getYDriveAxis();
+        double rot = keyMap.getRotDriveAxis();
+
+        mechanum.setXYRot(x, y,
                 rot);
         lift.set(keyMap.getLiftAxis());
     }
@@ -65,16 +66,16 @@ public class Uri extends IterativeRobot {
 
     @Override
     public void testPeriodic() {
-        
+
     }
 
     @Override
     public void disabledInit() {
-        
+
     }
 
     @Override
     public void disabledPeriodic() {
-        
-    }    
+
+    }
 }

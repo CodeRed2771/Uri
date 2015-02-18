@@ -1,3 +1,7 @@
-/dist/
-/build/
-/nbproject/
+/dist/**
+/build/**
+/nbproject/**
+/bin/**
+/build.properties
+.classpath
+sysProps.xml
