@@ -2,8 +2,6 @@ package com.coderedrobotics.uri;
 
 import com.coderedrobotics.libs.ControlsBoxLEDs;
 import com.coderedrobotics.libs.Drive;
-import com.coderedrobotics.libs.HID.HID;
-import com.coderedrobotics.libs.HID.LogitechF310;
 import com.coderedrobotics.libs.MechanumDrive;
 import com.coderedrobotics.libs.PWMController;
 import com.coderedrobotics.uri.statics.KeyMap;
@@ -20,8 +18,7 @@ public class Uri extends IterativeRobot {
     Drive mechanum;
     KeyMap keyMap;
     ControlsBoxLEDs leds;
-    PWMController lift;
-
+    Lift lift;
     @Override
     public void robotInit() {
         mechanum = new MechanumDrive(new PWMController(Wiring.FRONT_LEFT_MOTOR, false),
@@ -30,7 +27,7 @@ public class Uri extends IterativeRobot {
                 new PWMController(Wiring.REAR_RIGHT_MOTOR, true));
         keyMap = new KeyMap();
         leds = new ControlsBoxLEDs(Wiring.RED_AND_GREEN_LEDS, Wiring.BLUE_LEDS);
-        lift = new PWMController(Wiring.LIFT_MOTOR, false);
+        lift = new Lift(new PWMController(Wiring.LIFT_MOTOR, false));
     }
 
     @Override
@@ -50,13 +47,21 @@ public class Uri extends IterativeRobot {
 
     @Override
     public void teleopPeriodic() {
-        double x = keyMap.getXDriveAxis();
-        double y = keyMap.getYDriveAxis();
-        double rot = keyMap.getRotDriveAxis();
-
-        mechanum.setXYRot(x, y,
-                rot);
-        lift.set(keyMap.getLiftAxis());
+        double gear = 1;
+        if (keyMap.getSlowButton()) {
+            gear = .3;
+        }
+        
+        mechanum.setXYRot(keyMap.getXDriveAxis() * gear, -keyMap.getYDriveAxis() * gear, 
+                keyMap.getRotDriveAxis() * gear);
+        lift.set(-keyMap.getLiftAxis());
+        
+        if (keyMap.getReverseDriveButton()) {
+            keyMap.toggleReverseDrive();
+        }
+        if (keyMap.getSingleControllerToggleButton()) {
+            keyMap.toggleSingleControllerMode();
+        }
     }
 
     @Override

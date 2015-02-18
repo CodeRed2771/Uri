@@ -28,7 +28,7 @@ public class KeyMap {
     private final Axis liftAxis = LogitechF310.DPAD_Y;
     private final Button reverseDriveButton = LogitechF310.BUMPER_LEFT;
     private final Button singleControllerModeButton = LogitechF310.STICK_RIGHT;
-    private final Button gearButton = LogitechF310.BUMPER_RIGHT;
+    private final Button slowButton = LogitechF310.BUMPER_RIGHT;
     // CONTROLLER 2
     
     // BUTTON STATES
@@ -57,7 +57,7 @@ public class KeyMap {
     }
     
     public boolean getReverseDriveButton() {
-        return getHID(1).buttonPressed(reverseDriveButton, reverseDriveButtonState);
+        return getHID(gamepad1).buttonPressed(reverseDriveButton, reverseDriveButtonState);
     }
 
     public void toggleReverseDrive() {
@@ -81,35 +81,34 @@ public class KeyMap {
     }
     
     public boolean getSingleControllerToggleButton() {
-        return getHID(1).buttonPressed(singleControllerModeButton, singleControllerModeState);
+        return getHID(gamepad1).buttonPressed(singleControllerModeButton, singleControllerModeState);
     }
 
     public double getYDriveAxis() {
-        double val = getHID(gamepad1).axis(driveYAxis);
-        val *= getHID(gamepad1).buttonToggled(gearButton, gearStateA, gearStateB) ? 0.4d : 1d;
         if (reverseDrive) {
-            return -val;
+            return -getHID(gamepad1).axis(driveYAxis);
         } else {
-            return val;
+            return getHID(gamepad1).axis(driveYAxis);
         }
     }
     
     public double getXDriveAxis() {
-        double val = getHID(gamepad1).axis(driveXAxis);
-        val *= getHID(gamepad1).buttonToggled(gearButton, gearStateA, gearStateB) ? 0.4d : 1d;
         if (reverseDrive) {
-            return -val;
+            return -getHID(gamepad1).axis(driveXAxis);
         } else {
-            return val;
+            return getHID(gamepad1).axis(driveXAxis);
         }
     }
     
     public double getRotDriveAxis() {
-        return getHID(gamepad1).axis(driveRotAxis) *
-                (getHID(gamepad1).buttonToggled(gearButton, gearStateA, gearStateB) ? 0.4d : 1d);
+        return getHID(gamepad1).axis(driveRotAxis);
     }
     
     public double getLiftAxis() {
         return getHID(gamepad1).axis(liftAxis);
+    }
+    
+    public boolean getSlowButton() {
+        return getHID(gamepad1).button(slowButton);
     }
 }
