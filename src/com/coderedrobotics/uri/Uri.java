@@ -8,6 +8,7 @@ import com.coderedrobotics.libs.PWMController;
 import com.coderedrobotics.libs.VirtualizableAnalogInput;
 import com.coderedrobotics.uri.statics.KeyMap;
 import com.coderedrobotics.uri.statics.Wiring;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -23,7 +24,7 @@ public class Uri extends IterativeRobot {
 //    Extender extender;
     PWMController extender;
 //    VirtualizableAnalogInput stringpot;
-
+    
     @Override
     public void robotInit() {
         mechanum = new MechanumDrive(new PWMController(Wiring.FRONT_LEFT_MOTOR, false),
