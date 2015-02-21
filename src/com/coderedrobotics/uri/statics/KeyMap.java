@@ -36,6 +36,13 @@ public class KeyMap {
     private final HID.ButtonState singleControllerModeState = HID.newButtonState();
     private final HID.ButtonState gearStateA = HID.newButtonState();
     private final HID.ButtonState gearStateB = HID.newButtonState();
+
+    private final HID.ButtonState p = HID.newButtonState();
+    private final HID.ButtonState pd = HID.newButtonState();
+    private final HID.ButtonState i = HID.newButtonState();
+    private final HID.ButtonState id = HID.newButtonState();
+    private final HID.ButtonState d = HID.newButtonState();
+    private final HID.ButtonState dd = HID.newButtonState();
     
     public KeyMap() {
         
@@ -111,4 +118,11 @@ public class KeyMap {
     public boolean getSlowButton() {
         return getHID(gamepad1).button(slowButton);
     }
+
+    public boolean getp(){return getHID(gamepad2).buttonPressed(LogitechF310.DPAD_UP, p);}
+    public boolean getpd(){return getHID(gamepad2).buttonPressed(LogitechF310.DPAD_DOWN, pd);}
+    public boolean geti(){return getHID(gamepad2).buttonPressed(LogitechF310.STICK_LEFT_UP, i);}
+    public boolean getid(){return getHID(gamepad2).buttonPressed(LogitechF310.STICK_LEFT_DOWN, id);}
+    public boolean getd(){return getHID(gamepad2).buttonPressed(LogitechF310.STICK_RIGHT_UP, d);}
+    public boolean getdd(){return getHID(gamepad2).buttonPressed(LogitechF310.STICK_RIGHT_DOWN, dd);}
 }
