@@ -4,6 +4,7 @@ import com.coderedrobotics.libs.PIDControllerAIAO;
 import com.coderedrobotics.libs.PWMController;
 import com.coderedrobotics.libs.VirtualizableDigitalInput;
 import com.coderedrobotics.uri.statics.Calibration;
+import com.coderedrobotics.uri.statics.Wiring;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDOutput;
 
@@ -19,12 +20,12 @@ public class Lift implements PIDOutput {
     private final Encoder encoder;
     private boolean calibrated = false;
     private int calibration;
-    private final int maxDistance;
+    private final double maxDistance;
 
-    public Lift(PWMController controller) {
-        this.controller = controller;
-        encoder = new Encoder(Calibration.LIFT_ENCODER_A, Calibration.LIFT_ENCODER_B);
-        limitSwitch = new VirtualizableDigitalInput(Calibration.LIFT_LIMIT_SWITCH);
+    public Lift() {
+        this.controller = new PWMController(Wiring.LIFT_MOTOR, false);
+        encoder = new Encoder(Wiring.LIFT_ENCODER_A, Wiring.LIFT_ENCODER_B);
+        limitSwitch = new VirtualizableDigitalInput(Wiring.LIFT_LIMIT_SWITCH);
         pid = new PIDControllerAIAO(Calibration.LIFT_P, Calibration.LIFT_I, 
                 Calibration.LIFT_D, encoder, this, "lift");
         maxDistance = Calibration.LIFT_MAX_DISTANCE;
@@ -44,7 +45,7 @@ public class Lift implements PIDOutput {
                 controller.set(0);
             }
         } else {
-            if (!limitSwitch.get()) {
+            if (!limitSwitch.get() && speed < 0) {
                 controller.set(speed);
             } else {
                 controller.set(0);

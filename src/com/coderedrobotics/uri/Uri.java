@@ -12,7 +12,6 @@ import com.coderedrobotics.libs.PlaceTracker;
 import com.coderedrobotics.uri.statics.Calibration;
 import com.coderedrobotics.uri.statics.KeyMap;
 import com.coderedrobotics.uri.statics.Wiring;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -29,12 +28,15 @@ public class Uri extends IterativeRobot {
     KeyMap keyMap;
     ControlsBoxLEDs leds;
     Lift lift;
+//    Extender extender;
+    PWMController extender;
+//    VirtualizableAnalogInput stringpot;
 
     @Override
     public void robotInit() {
         keyMap = new KeyMap();
         leds = new ControlsBoxLEDs(Wiring.RED_AND_GREEN_LEDS, Wiring.BLUE_LEDS);
-        lift = new Lift(new PWMController(Wiring.LIFT_MOTOR, false));
+        lift = new Lift();
 
         mechanum = new MechanumDrive(new PWMController(Wiring.FRONT_LEFT_MOTOR, false),
                 new PWMController(Wiring.FRONT_RIGHT_MOTOR, true),
@@ -48,7 +50,11 @@ public class Uri extends IterativeRobot {
                 Calibration.Y_DRIVE_P, Calibration.Y_DRIVE_I, Calibration.Y_DRIVE_D,
                 Calibration.ROT_DRIVE_P, Calibration.ROT_DRIVE_I, Calibration.ROT_DRIVE_D);
         teleopDrive = new FieldOrientedDrive(pIDDrive, placeTracker.getRotPIDSource());
-        ((FieldOrientedDrive)teleopDrive).disableFieldOrientedControl();
+        ((FieldOrientedDrive) teleopDrive).disableFieldOrientedControl();
+
+//        extender = new Extender();
+        extender = new PWMController(5, true);
+//        stringpot = new VirtualizableAnalogInput(Wiring.EXTENDER_STRING_POT);
     }
 
     @Override
@@ -72,10 +78,9 @@ public class Uri extends IterativeRobot {
         if (keyMap.getSlowButton()) {
             gear = .3;
         }
-
-        mechanum.setXYRot(keyMap.getXDriveAxis() * gear, -keyMap.getYDriveAxis() * gear,
+        mechanum.setXYRot(keyMap.getXDriveAxis() * gear, keyMap.getYDriveAxis() * gear,
                 keyMap.getRotDriveAxis() * gear);
-        lift.set(-keyMap.getLiftAxis());
+        lift.set(keyMap.getLiftAxis());
 
         if (keyMap.getReverseDriveButton()) {
             keyMap.toggleReverseDrive();
@@ -83,6 +88,14 @@ public class Uri extends IterativeRobot {
         if (keyMap.getSingleControllerToggleButton()) {
             keyMap.toggleSingleControllerMode();
         }
+
+        if (keyMap.getReverseDrive()) {
+            extender.set(.7);
+        } else {
+            extender.set(0);
+        }
+        //DebugConsole.getInstance().println("hi", "hi");
+//        DebugConsole.getInstance().println(stringpot.get(), "stringpot");
     }
 
     @Override
