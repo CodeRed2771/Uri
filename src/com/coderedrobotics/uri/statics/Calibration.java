@@ -15,4 +15,13 @@ public class Calibration {
     public static final int LIFT_I = 0;
     public static final int LIFT_D = 0;
     
+    public static final double X_DRIVE_P = 0;
+    public static final double X_DRIVE_I = 0;
+    public static final double X_DRIVE_D = 0;
+    public static final double Y_DRIVE_P = 0;
+    public static final double Y_DRIVE_I = 0;
+    public static final double Y_DRIVE_D = 0;
+    public static final double ROT_DRIVE_P = 0;
+    public static final double ROT_DRIVE_I = 0;
+    public static final double ROT_DRIVE_D = 0;
 }
