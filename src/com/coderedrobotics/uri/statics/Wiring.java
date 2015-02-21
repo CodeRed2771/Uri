@@ -23,10 +23,10 @@ public class Wiring {
     public static final int REAR_RIGHT_ENCODER_B = 1;
     public static final int FRONT_RIGHT_ENCODER_A = 2;
     public static final int FRONT_RIGHT_ENCODER_B = 3;
-    public static final int FRONT_LEFT_ENCODER_A = 4;
-    public static final int FRONT_LEFT_ENCODER_B = 5;
-    public static final int REAR_LEFT_ENCODER_A = 6;
-    public static final int REAR_LEFT_ENCODER_B = 7;
+    public static final int FRONT_LEFT_ENCODER_A = 5;
+    public static final int FRONT_LEFT_ENCODER_B = 4;
+    public static final int REAR_LEFT_ENCODER_A = 7;
+    public static final int REAR_LEFT_ENCODER_B = 6;
     public static final int LIFT_ENCODER_A = 8;
     public static final int LIFT_ENCODER_B = 9;
     
