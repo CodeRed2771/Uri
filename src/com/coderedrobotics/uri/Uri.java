@@ -44,7 +44,7 @@ public class Uri extends IterativeRobot {
         
         keyMap = new KeyMap();
         leds = new ControlsBoxLEDs(Wiring.RED_AND_GREEN_LEDS, Wiring.BLUE_LEDS);
-        lift = new Lift();
+        lift = new Lift(dash);
 
         placeTracker = new MechanumPlaceTracker(
                 Wiring.REAR_RIGHT_ENCODER_A, Wiring.REAR_RIGHT_ENCODER_B,
