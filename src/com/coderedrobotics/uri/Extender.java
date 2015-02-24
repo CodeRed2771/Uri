@@ -1,8 +1,9 @@
 package com.coderedrobotics.uri;
 
-import com.coderedrobotics.libs.PIDControllerAIAO;
+import com.coderedrobotics.libs.dash.PIDControllerAIAO;
 import com.coderedrobotics.libs.PWMController;
 import com.coderedrobotics.libs.VirtualizableAnalogInput;
+import com.coderedrobotics.libs.dash.DashBoard;
 import com.coderedrobotics.uri.statics.Calibration;
 import com.coderedrobotics.uri.statics.Wiring;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -18,9 +19,9 @@ public class Extender implements PIDOutput {
     private final PWMController controller;
     private final double calibration;
     
-    public Extender() {
+    public Extender(DashBoard dash) {
         pid = new PIDControllerAIAO(Calibration.EXTENDER_P, Calibration.EXTENDER_I, 
-                Calibration.EXTENDER_D, stringPot, this, "extender");
+                Calibration.EXTENDER_D, stringPot, this, dash, "extender");
         stringPot = new VirtualizableAnalogInput(Wiring.EXTENDER_STRING_POT);
         controller = new PWMController(Wiring.EXTENDER_MOTOR, false);
         calibration = Calibration.EXTENDER_POT_DISTANCE;

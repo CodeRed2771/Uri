@@ -26,6 +26,7 @@ public class KeyMap {
     private final Axis driveXAxis = LogitechF310.STICK_LEFT_X;
     private final Axis driveRotAxis = LogitechF310.STICK_RIGHT_X;
     private final Axis liftAxis = LogitechF310.DPAD_Y;
+    private final Axis extenderAxis = LogitechF310.STICK_RIGHT_Y;
     private final Button reverseDriveButton = LogitechF310.BUMPER_LEFT;
     private final Button singleControllerModeButton = LogitechF310.STICK_RIGHT;
     private final Button slowButton = LogitechF310.BUMPER_RIGHT;
@@ -112,7 +113,11 @@ public class KeyMap {
     }
     
     public double getLiftAxis() {
-        return getHID(gamepad1).axis(liftAxis);
+        return getHID(gamepad2).axis(liftAxis);
+    }
+    
+    public double getExtendAxis() {
+        return getHID(gamepad2).axis(extenderAxis);
     }
     
     public boolean getSlowButton() {
