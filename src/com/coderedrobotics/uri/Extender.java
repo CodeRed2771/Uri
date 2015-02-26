@@ -22,7 +22,7 @@ public class Extender {
 
     public Extender(DashBoard dash) {
         this.dash = dash;
-        controller = new PWMController(Wiring.EXTENDER_MOTOR, false);
+        controller = new PWMController(Wiring.EXTENDER_MOTOR, true);
         stringPot = new VirtualizableAnalogInput(Wiring.EXTENDER_STRING_POT);
         pid = new PIDControllerAIAO(Calibration.EXTENDER_P, Calibration.EXTENDER_I,
                 Calibration.EXTENDER_D, stringPot, controller, dash, "extender");
