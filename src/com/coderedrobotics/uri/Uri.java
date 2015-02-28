@@ -42,8 +42,8 @@ public class Uri extends IterativeRobot {
 
     @Override
     public void robotInit() {
-        DashBoard.setConnectionAddress("10.27.71.59");
-        dash = new DashBoard();
+        DashBoard.setConnectionAddress("169.254.217.130");
+        dash = null;//new DashBoard();
 
         keyMap = new KeyMap();
         leds = new ControlsBoxLEDs(Wiring.RED_AND_GREEN_LEDS, Wiring.BLUE_LEDS);
@@ -73,7 +73,7 @@ public class Uri extends IterativeRobot {
                 -1 / Calibration.X_TOP_SPEED,
                 -1 / Calibration.Y_TOP_SPEED,
                 1 / Calibration.ROT_TOP_SPEED, dash);
-
+        
         teleopDrive = new FieldOrientedDrive(pIDDrive, placeTracker.getRotPIDSource());
         ((FieldOrientedDrive) teleopDrive).disableFieldOrientedControl();
 
@@ -111,8 +111,10 @@ public class Uri extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
 
-        dash.prtln("X  " + placeTracker.getX(), 10);
-        dash.prtln("Y  " + placeTracker.getY(), 11);
+        if (dash != null) {
+            dash.prtln("X  " + placeTracker.getX(), 10);
+            dash.prtln("Y  " + placeTracker.getY(), 11);
+        }
 
         // ----- DRIVE ----- //
         double gear = 1;
@@ -141,7 +143,7 @@ public class Uri extends IterativeRobot {
         if (keyMap.getRetractButton()) {
             extender.retract();
         }
-        extender.change(keyMap.getManualExtend());
+        extender.change(keyMap.getExtendAxis());
 
         ///////////////////////////////
         if (keyMap.getSingleControllerToggleButton()) {

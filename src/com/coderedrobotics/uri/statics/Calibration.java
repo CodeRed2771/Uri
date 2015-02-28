@@ -10,8 +10,8 @@ public class Calibration {
     public static final double LIFT_MAX_DISTANCE = 8100;
     public static final double LIFT_MIN_DISTANCE = 200;
     public static final double LIFT_P = 0.8;
-    public static final double LIFT_I = 0;
-    public static final double LIFT_D = 0;
+    public static final double LIFT_I = 0.0;
+    public static final double LIFT_D = 0.0;
     
     // DRIVE
     public static final double X_DRIVE_P = -10;
@@ -20,8 +20,8 @@ public class Calibration {
     public static final double Y_DRIVE_P = -10;
     public static final double Y_DRIVE_I = 0;
     public static final double Y_DRIVE_D = 0;
-    public static final double ROT_DRIVE_P = 2;
-    public static final double ROT_DRIVE_I = 1;
+    public static final double ROT_DRIVE_P = 3;
+    public static final double ROT_DRIVE_I = 0;
     public static final double ROT_DRIVE_D = 0;
     
     public static final double X_SCALE = 0.013310328 / 8.064516129;
