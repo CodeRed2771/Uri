@@ -6,49 +6,54 @@ import com.coderedrobotics.libs.VirtualizableAnalogInput;
 import com.coderedrobotics.libs.dash.DashBoard;
 import com.coderedrobotics.uri.statics.Calibration;
 import com.coderedrobotics.uri.statics.Wiring;
-import edu.wpi.first.wpilibj.PIDOutput;
 
 /**
  *
  * @author michael
  */
-public class Extender implements PIDOutput {
-    
+public class Extender {
+
     private VirtualizableAnalogInput stringPot;
     private final PIDControllerAIAO pid;
     private final PWMController controller;
-    private final double calibration;
-    
+    private final double maxCalibration;
+    private final double minCalibration;
+    private final DashBoard dash;
+
     public Extender(DashBoard dash) {
-        pid = new PIDControllerAIAO(Calibration.EXTENDER_P, Calibration.EXTENDER_I, 
-                Calibration.EXTENDER_D, stringPot, this, dash, "extender");
-        stringPot = new VirtualizableAnalogInput(Wiring.EXTENDER_STRING_POT);
+        this.dash = dash;
         controller = new PWMController(Wiring.EXTENDER_MOTOR, false);
-        calibration = Calibration.EXTENDER_POT_DISTANCE;
-        double moveSpeed = Calibration.EXTENDER_MOVE_SPEED;
-        pid.setOutputRange(-moveSpeed, moveSpeed);
+        stringPot = new VirtualizableAnalogInput(Wiring.EXTENDER_STRING_POT);
+        pid = new PIDControllerAIAO(Calibration.EXTENDER_P, Calibration.EXTENDER_I,
+                Calibration.EXTENDER_D, stringPot, controller, dash, "extender");
+        maxCalibration = Calibration.EXTENDER_POT_MAX;
+        minCalibration = Calibration.EXTENDER_POT_MIN;
+        pid.setOutputRange(0, Calibration.EXTENDER_MOVE_SPEED);
+        pid.enable();
     }
 
     public void extend() {
-        pid.enable();
-        pid.setSetpoint(calibration);
+        set(maxCalibration);
     }
-    
+
     public void retract() {
-        pid.disable();
+        set(minCalibration);
     }
-    
-    public boolean isExtended() {
-        return pid.isEnable();
+
+    public void change(double change) {
+        set(pid.getSetpoint() + change);
+        dash.prtln(""+stringPot.get(), 2);
     }
-    
-    public boolean isReracted() {
-        return !isExtended();
+
+    public void set(double setpoint) {
+        pid.setSetpoint(Math.max(minCalibration, Math.min(maxCalibration, setpoint)));
     }
-    
-    @Override
-    public void pidWrite(double output) {
-        controller.set(output);
-    }
-    
+
+//    public boolean isExtended() {
+//        return pid.isEnable();
+//    }
+
+//    public boolean isReracted() {
+//        return !isExtended();
+//    }
 }
