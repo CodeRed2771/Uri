@@ -95,7 +95,7 @@ public class Lift implements PIDOutput {
     }
 
     public boolean calibrate() {
-        move(-1);
+        if (!isCalibrated()) move(-1);
         return calibrated;
     }
 

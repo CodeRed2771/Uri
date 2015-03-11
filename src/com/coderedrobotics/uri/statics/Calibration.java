@@ -14,19 +14,19 @@ public class Calibration {
     public static final double LIFT_D = 0.0;
     
     // DRIVE
-    public static final double X_DRIVE_P = -10;
+    public static final double X_DRIVE_P = -10;//-10;
     public static final double X_DRIVE_I = 0;
     public static final double X_DRIVE_D = 0;
-    public static final double Y_DRIVE_P = -10;
+    public static final double Y_DRIVE_P = -10;//-10;
     public static final double Y_DRIVE_I = 0;
     public static final double Y_DRIVE_D = 0;
-    public static final double ROT_DRIVE_P = 3;
-    public static final double ROT_DRIVE_I = 0;
+    public static final double ROT_DRIVE_P = 4;//3;
+    public static final double ROT_DRIVE_I = 1;
     public static final double ROT_DRIVE_D = 0;
     
-    public static final double X_SCALE = 0.013310328 / 8.064516129;
-    public static final double Y_SCALE =  0.010912563;
-    public static final double ROT_SCALE = 0.027147274;
+    public static final double X_SCALE = 0.007854536;
+    public static final double Y_SCALE = 0.01078828;
+    public static final double ROT_SCALE = 0.022538738;
     public static final double X_TOP_SPEED = 0.12 * 8.064516129; // 0.35?
     public static final double Y_TOP_SPEED = 0.12;
     public static final double ROT_TOP_SPEED = 0.2;

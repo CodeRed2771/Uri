@@ -38,12 +38,15 @@ public class Uri extends IterativeRobot {
 
     DashBoard dash;
 
+    double distance;
     long time;
+    double angle;
+    boolean disable = false;
 
     @Override
     public void robotInit() {
-        DashBoard.setConnectionAddress("169.254.217.130");
-        dash = null;//new DashBoard();
+        DashBoard.setConnectionAddress("10.27.71.55");
+        dash = new DashBoard();
 
         keyMap = new KeyMap();
         leds = new ControlsBoxLEDs(Wiring.RED_AND_GREEN_LEDS, Wiring.BLUE_LEDS);
@@ -73,9 +76,9 @@ public class Uri extends IterativeRobot {
                 -1 / Calibration.X_TOP_SPEED,
                 -1 / Calibration.Y_TOP_SPEED,
                 1 / Calibration.ROT_TOP_SPEED, dash);
-        
+
         teleopDrive = new FieldOrientedDrive(pIDDrive, placeTracker.getRotPIDSource());
-        ((FieldOrientedDrive) teleopDrive).disableFieldOrientedControl();
+        //((FieldOrientedDrive) teleopDrive).disableFieldOrientedControl();
 
         extender = new Extender(dash);
 //        extender = new PWMController(5, true);
@@ -85,19 +88,29 @@ public class Uri extends IterativeRobot {
     @Override
     public void autonomousInit() {
         leds.activateAutonomous();
-        time = System.currentTimeMillis();
+        distance = placeTracker.getLinearPIDSource().pidGet();
+        angle = placeTracker.getRot();
     }
 
     @Override
     public void autonomousPeriodic() {
-        lift.calibrate();
-        
         placeTracker.step();
-        //teleopDrive.setXYRot(p, p, p);
 
-        //placeTracker.goTo(0, 24, 0);
-        if (time + 2000 > System.currentTimeMillis()) {
-            teleopDrive.setXYRot(1, 0, 0);
+        if (!lift.calibrate()) {
+            teleopDrive.setXYRot(0, 0, 0);
+            time = System.currentTimeMillis();
+        } else if (time + 800 > System.currentTimeMillis()) {
+            teleopDrive.setXYRot(0, 0, 0);
+            lift.set(1);
+            angle = placeTracker.getRot();
+        } else if (angle - 75 < placeTracker.getRot() && !disable) {
+            dash.prtln("rot: "+placeTracker.getRot(), 13);
+            teleopDrive.setXYRot(0, 0, 0.37);
+            lift.set(0);
+        } else if (distance + 23 > placeTracker.getLinearPIDSource().pidGet()) {
+            teleopDrive.setXYRot(0, -0.6, 0);
+            lift.set(0);
+            disable = true;
         } else {
             teleopDrive.setXYRot(0, 0, 0);
         }
@@ -111,10 +124,11 @@ public class Uri extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
 
-        if (dash != null) {
+        //if (dash != null) {
             dash.prtln("X  " + placeTracker.getX(), 10);
             dash.prtln("Y  " + placeTracker.getY(), 11);
-        }
+            dash.streamPacket(0.1, "test");
+        //}
 
         // ----- DRIVE ----- //
         double gear = 1;
