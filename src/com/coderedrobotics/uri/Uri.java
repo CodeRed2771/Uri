@@ -38,6 +38,8 @@ public class Uri extends IterativeRobot {
 
     DashBoard dash;
 
+    long time;
+
     @Override
     public void robotInit() {
         DashBoard.setConnectionAddress("10.27.71.59");
@@ -53,7 +55,7 @@ public class Uri extends IterativeRobot {
                 Wiring.FRONT_RIGHT_ENCODER_A, Wiring.FRONT_RIGHT_ENCODER_B,
                 Wiring.FRONT_LEFT_ENCODER_A, Wiring.FRONT_LEFT_ENCODER_B,
                 Wiring.REAR_LEFT_ENCODER_A, Wiring.REAR_LEFT_ENCODER_B, Wiring.GYRO,
-                Calibration.X_SCALE, Calibration.Y_SCALE, Calibration.ROT_SCALE);
+                Calibration.X_SCALE, Calibration.Y_SCALE, Calibration.ROT_SCALE, dash);
 
         mechanum = new MechanumDrive(new PWMController(Wiring.FRONT_LEFT_MOTOR, false, placeTracker.leftFrontEncoder),
                 new PWMController(Wiring.FRONT_RIGHT_MOTOR, true, placeTracker.rightFrontEncoder),
@@ -83,11 +85,22 @@ public class Uri extends IterativeRobot {
     @Override
     public void autonomousInit() {
         leds.activateAutonomous();
+        time = System.currentTimeMillis();
     }
 
     @Override
     public void autonomousPeriodic() {
+        lift.calibrate();
+        
+        placeTracker.step();
+        //teleopDrive.setXYRot(p, p, p);
 
+        //placeTracker.goTo(0, 24, 0);
+        if (time + 2000 > System.currentTimeMillis()) {
+            teleopDrive.setXYRot(1, 0, 0);
+        } else {
+            teleopDrive.setXYRot(0, 0, 0);
+        }
     }
 
     @Override
@@ -97,7 +110,6 @@ public class Uri extends IterativeRobot {
 
     @Override
     public void teleopPeriodic() {
-
         // ----- DRIVE ----- //
         double gear = 1;
         if (keyMap.getSlowButton()) {
@@ -114,6 +126,10 @@ public class Uri extends IterativeRobot {
         ///////////////////////////////
         lift.set(keyMap.getLiftAxis());
 
+        if (keyMap.getToggleLiftFallback()) {
+            lift.togglePIDEnabled();
+        }
+
         ///////////////////////////////
         if (keyMap.getExtendButton()) {
             extender.extend();
@@ -121,13 +137,13 @@ public class Uri extends IterativeRobot {
         if (keyMap.getRetractButton()) {
             extender.retract();
         }
+        
         extender.change(keyMap.getManualExtend());
 
         ///////////////////////////////
         if (keyMap.getSingleControllerToggleButton()) {
             keyMap.toggleSingleControllerMode();
         }
-        
         placeTracker.step();
     }
 

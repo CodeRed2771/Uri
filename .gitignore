@@ -1,16 +1,8 @@
-<<<<<<< HEAD
 /dist/**
 /build/**
 /nbproject/**
 /bin/**
-/build.properties
 .classpath
-sysProps.xml
-=======
-dist/**
-build/**
-nbproject/**
 sysProps.xml
 build.properties
 build.properties~
->>>>>>> origin/master

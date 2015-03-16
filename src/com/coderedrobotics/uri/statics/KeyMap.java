@@ -21,7 +21,7 @@ public class KeyMap {
     private boolean reverseDrive = false;
     private boolean singleControllerMode = false;
 
-    // CONTROLLER 1
+    // CONTROLLER 0
     private final Axis driveYAxis = LogitechF310.STICK_LEFT_Y;
     private final Axis driveXAxis = LogitechF310.STICK_LEFT_X;
     private final Axis driveRotAxis = LogitechF310.STICK_RIGHT_X;
@@ -29,11 +29,12 @@ public class KeyMap {
     private final Button singleControllerModeButton = LogitechF310.STICK_RIGHT;
     private final Button slowButton = LogitechF310.BUMPER_RIGHT;
 
-    // CONTROLLER 2
+    // CONTROLLER 1
     private final Axis liftAxis = LogitechF310.DPAD_Y;
     private final Axis extenderAxis = LogitechF310.STICK_RIGHT_Y;
     private final Button extendButton = LogitechF310.A;
     private final Button retractButton = LogitechF310.B;
+    private final Button toggleLiftFallbackButton = LogitechF310.BACK;
 
     // BUTTON STATES
     private final HID.ButtonState reverseDriveButtonState = HID.newButtonState();
@@ -42,6 +43,7 @@ public class KeyMap {
     private final HID.ButtonState retractButtonState = HID.newButtonState();
     private final HID.ButtonState gearStateA = HID.newButtonState();
     private final HID.ButtonState gearStateB = HID.newButtonState();
+    private final HID.ButtonState liftFallbackButtonState = HID.newButtonState();
 
     private final HID.ButtonState p = HID.newButtonState();
     private final HID.ButtonState pd = HID.newButtonState();
@@ -136,6 +138,10 @@ public class KeyMap {
 
     public boolean getSlowButton() {
         return getHID(gamepad1).button(slowButton);
+    }
+
+    public boolean getToggleLiftFallback() {
+        return getHID(gamepad2).buttonPressed(toggleLiftFallbackButton, liftFallbackButtonState);
     }
 
     public boolean getp(){return getHID(gamepad2).buttonPressed(LogitechF310.DPAD_UP, p);}
