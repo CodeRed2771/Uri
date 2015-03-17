@@ -34,19 +34,21 @@ public class Lift implements PIDOutput {
         encoder = new Encoder(Wiring.LIFT_ENCODER_A, Wiring.LIFT_ENCODER_B);
         limitSwitch = new VirtualizablePsuedoDigitalInput(Wiring.LIFT_LIMIT_SWITCH, dash);
         pid = new PIDControllerAIAO(Calibration.LIFT_P, Calibration.LIFT_I,
-                Calibration.LIFT_D, new PIDDerivativeCalculator(encoder), this, dash, "lift");
+                Calibration.LIFT_D, new PIDDerivativeCalculator(encoder), this, this.dash, "lift");
         maxDistance = Calibration.LIFT_MAX_DISTANCE;
         minDistance = Calibration.LIFT_MIN_DISTANCE;
     }
 
     public void set(double speed) {
         if (pid.isEnable()) {
-            pid.setSetpoint(speed*2.5);
+            pid.setSetpoint(speed * 2.5);
         } else {
             move(speed);
         }
-        dash.prtln("Lift Encoder: " + encoder.getRaw(), 3);
-        dash.prtln("Lift Limit: " + limitSwitch.getState(), 4);
+        if (dash != null) {
+            dash.prtln("Lift Encoder: " + encoder.getRaw(), 3);
+            dash.prtln("Lift Limit: " + limitSwitch.getState(), 4);
+        }
     }
 
     public void disablePID() {
@@ -94,7 +96,7 @@ public class Lift implements PIDOutput {
     }
 
     public boolean calibrate() {
-        move(-1);
+        if (!isCalibrated()) move(-1);
         return calibrated;
     }
 

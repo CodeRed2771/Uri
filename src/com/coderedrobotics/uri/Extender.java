@@ -29,7 +29,7 @@ public class Extender {
         maxCalibration = Calibration.EXTENDER_POT_MAX;
         minCalibration = Calibration.EXTENDER_POT_MIN;
         pid.setOutputRange(0, Calibration.EXTENDER_MOVE_SPEED);
-        pid.enable();
+        pid.disable();
     }
 
     public void extend() {
@@ -41,8 +41,9 @@ public class Extender {
     }
 
     public void change(double change) {
-        set(pid.getSetpoint() + change);
-        dash.prtln(""+stringPot.get(), 2);
+        controller.set(change*0.5);
+        //set(pid.getSetpoint() + change);
+        //dash.prtln(""+stringPot.get(), 2);
     }
 
     public void set(double setpoint) {
