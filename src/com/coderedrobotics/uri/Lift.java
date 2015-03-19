@@ -22,7 +22,7 @@ public class Lift implements PIDOutput {
     private final Encoder encoder;
     private final DashBoard dash;
 
-    private boolean calibrated = false;
+    private boolean calibrated = true;
     private int calibration;
     private final double maxDistance;
     private boolean manualMode;
@@ -73,8 +73,8 @@ public class Lift implements PIDOutput {
 
     private void move(double speed) {
         if (calibrated) {
-            if ((speed > 0 && encoder.getRaw() > calibration + maxDistance)
-                    || (speed < 0 && encoder.getRaw() < calibration + minDistance)) {
+            if (((speed > 0 && encoder.getRaw() > calibration + maxDistance)
+                    || (speed < 0 && encoder.getRaw() < calibration + minDistance)) && false) {
                 controller.set(0);
             } else {
                 controller.set(speed);

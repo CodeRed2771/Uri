@@ -20,8 +20,8 @@ public class Calibration {
     public static final double Y_DRIVE_P = -10;//-10;
     public static final double Y_DRIVE_I = 0;
     public static final double Y_DRIVE_D = 0;
-    public static final double ROT_DRIVE_P = 4;//3;
-    public static final double ROT_DRIVE_I = 1;
+    public static final double ROT_DRIVE_P = 0;//3;
+    public static final double ROT_DRIVE_I = 0;
     public static final double ROT_DRIVE_D = 0;
     
     public static final double X_SCALE = 0.007854536;

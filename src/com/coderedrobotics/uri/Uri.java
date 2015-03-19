@@ -30,10 +30,10 @@ public class Uri extends IterativeRobot {
     Drive teleopDrive;
     KeyMap keyMap;
     ControlsBoxLEDs leds;
-    Lift lift;
-    Extender extender;
-//    PWMController extender;
-//    PWMCont roller lift;
+   // Lift lift;
+    //Extender extender;
+    //PWMController extenderPWM;
+    PWMController lift;
 //    VirtualizableAnalogInput stringpot;
 
     DashBoard dash;
@@ -50,8 +50,8 @@ public class Uri extends IterativeRobot {
 
         keyMap = new KeyMap();
         leds = new ControlsBoxLEDs(Wiring.RED_AND_GREEN_LEDS, Wiring.BLUE_LEDS);
-        lift = new Lift(dash);
-//        lift = new PWMController(4, false);
+       // lift = new Lift(dash);
+        lift = new PWMController(4, false);
 
         placeTracker = new MechanumPlaceTracker(
                 Wiring.REAR_RIGHT_ENCODER_A, Wiring.REAR_RIGHT_ENCODER_B,
@@ -78,10 +78,9 @@ public class Uri extends IterativeRobot {
                 1 / Calibration.ROT_TOP_SPEED, dash);
 
         teleopDrive = new FieldOrientedDrive(pIDDrive, placeTracker.getRotPIDSource());
-        //((FieldOrientedDrive) teleopDrive).disableFieldOrientedControl();
+        ((FieldOrientedDrive) teleopDrive).disableFieldOrientedControl();
 
-        extender = new Extender(dash);
-//        extender = new PWMController(5, true);
+        //extender = new Extender(dash);
 //        stringpot = new VirtualizableAnalogInput(Wiring.EXTENDER_STRING_POT);
     }
 
@@ -96,24 +95,24 @@ public class Uri extends IterativeRobot {
     public void autonomousPeriodic() {
         placeTracker.step();
 
-        if (!lift.calibrate()) {
-            teleopDrive.setXYRot(0, 0, 0);
-            time = System.currentTimeMillis();
-        } else if (time + 800 > System.currentTimeMillis()) {
-            teleopDrive.setXYRot(0, 0, 0);
-            lift.set(1);
-            angle = placeTracker.getRot();
-        } else if (angle - 75 < placeTracker.getRot() && !disable) {
-            dash.prtln("rot: "+placeTracker.getRot(), 13);
-            teleopDrive.setXYRot(0, 0, 0.37);
-            lift.set(0);
-        } else if (distance + 23 > placeTracker.getLinearPIDSource().pidGet()) {
-            teleopDrive.setXYRot(0, -0.6, 0);
-            lift.set(0);
-            disable = true;
-        } else {
-            teleopDrive.setXYRot(0, 0, 0);
-        }
+//        if (!lift.calibrate()) {
+//            teleopDrive.setXYRot(0, 0, 0);
+//            time = System.currentTimeMillis();
+//        } else if (time + 800 > System.currentTimeMillis()) {
+//            teleopDrive.setXYRot(0, 0, 0);
+//            lift.set(1);
+//            angle = placeTracker.getRot();
+//        } else if (angle - 75 < placeTracker.getRot() && !disable) {
+//            dash.prtln("rot: "+placeTracker.getRot(), 13);
+//            teleopDrive.setXYRot(0, 0, 0.37);
+//            lift.set(0);
+//        } else if (distance + 23 > placeTracker.getLinearPIDSource().pidGet()) {
+//            teleopDrive.setXYRot(0, -0.6, 0);
+//            lift.set(0);
+//            disable = true;
+//        } else {
+//            teleopDrive.setXYRot(0, 0, 0);
+//        }
     }
 
     @Override
@@ -137,20 +136,21 @@ public class Uri extends IterativeRobot {
         }
 
         ///////////////////////////////
-        lift.set(keyMap.getLiftAxis());
+        lift.set(-keyMap.getLiftAxis());
 
-        if (keyMap.getToggleLiftFallback()) {
-            lift.togglePIDEnabled();
-        }
+//        if (keyMap.getToggleLiftFallback()) {
+//            lift.togglePIDEnabled();
+//        }
 
         ///////////////////////////////
         if (keyMap.getExtendButton()) {
-            extender.extend();
+            //extender.extend();
         }
         if (keyMap.getRetractButton()) {
-            extender.retract();
+            //extender.retract();
         }
-        extender.change(keyMap.getExtendAxis());
+        //extender.change(keyMap.getExtendAxis());
+        //extenderPWM.set(keyMap.getExtendAxis());
 
         ///////////////////////////////
         if (keyMap.getSingleControllerToggleButton()) {
