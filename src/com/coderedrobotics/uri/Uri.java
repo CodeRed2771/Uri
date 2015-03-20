@@ -103,7 +103,6 @@ public class Uri extends IterativeRobot {
             lift.set(1);
             angle = placeTracker.getRot();
         } else if (angle - 75 < placeTracker.getRot() && !disable) {
-            dash.prtln("rot: "+placeTracker.getRot(), 13);
             teleopDrive.setXYRot(0, 0, 0.37);
             lift.set(0);
         } else if (distance + 23 > placeTracker.getLinearPIDSource().pidGet()) {
