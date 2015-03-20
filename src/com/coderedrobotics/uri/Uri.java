@@ -127,7 +127,7 @@ public class Uri extends IterativeRobot {
         if (keyMap.getSlowButton()) {
             gear = .3;
         }
-
+        
         teleopDrive.setXYRot(-keyMap.getXDriveAxis() * gear, -keyMap.getYDriveAxis() * gear,
                 keyMap.getRotDriveAxis() * gear);
 
