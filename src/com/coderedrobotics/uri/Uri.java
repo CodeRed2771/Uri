@@ -39,9 +39,17 @@ public class Uri extends IterativeRobot {
     DashBoard dash;
 
     double distance;
+    double encTicksPerInch = 92;
     long time;
     double angle;
     boolean disable = false;
+
+    int stage;
+    private enum AutonType {
+        NONE, LANDFILL, YELLOW_TOTE
+    }
+    private AutonType autonType = AutonType.YELLOW_TOTE;
+    private long startAutonConfirmTime;
 
     @Override
     public void robotInit() {
@@ -51,7 +59,7 @@ public class Uri extends IterativeRobot {
         keyMap = new KeyMap();
         leds = new ControlsBoxLEDs(Wiring.RED_AND_GREEN_LEDS, Wiring.BLUE_LEDS);
         lift = new Lift(dash);
-      //  lift = new PWMController(4, false);
+        //  lift = new PWMController(4, false);
 
         placeTracker = new MechanumPlaceTracker(
                 Wiring.REAR_RIGHT_ENCODER_A, Wiring.REAR_RIGHT_ENCODER_B,
@@ -87,33 +95,92 @@ public class Uri extends IterativeRobot {
     @Override
     public void autonomousInit() {
         leds.activateAutonomous();
-        distance = placeTracker.getLinearPIDSource().pidGet();
+        // CHANGE distance = placeTracker.getLinearPIDSource().pidGet();
+        distance = placeTracker.leftFrontEncoder.getRaw();
         angle = placeTracker.getRot();
+        System.out.println("Distance: " + distance);
     }
 
     @Override
     public void autonomousPeriodic() {
         placeTracker.step();
 
-        if (!lift.calibrate()) {
-            teleopDrive.setXYRot(0, 0, 0);
-            time = System.currentTimeMillis();
-        } else if (time + 800 > System.currentTimeMillis()) {
-            teleopDrive.setXYRot(0, 0, 0);
-            lift.set(1);
-            angle = placeTracker.getRot();
-        } else if (angle - 75 < placeTracker.getRot() && !disable) {
-            teleopDrive.setXYRot(0, 0, 0.37);
-            lift.set(0);
-        } else if (distance + 23 > placeTracker.getLinearPIDSource().pidGet()) {
-            teleopDrive.setXYRot(0, -0.6, 0);
-            lift.set(0);
-            disable = true;
-        } else {
-            teleopDrive.setXYRot(0, 0, 0);
+//        System.out.println("PLACE TRACKER: " + placeTracker.getLinearPIDSource().pidGet());
+//        System.out.println("LB: " + placeTracker.leftBackEncoder.getRaw()
+//                + " RB: " + placeTracker.rightBackEncoder.getRaw()
+//                + " LF: " + placeTracker.leftFrontEncoder.getRaw()
+//                + " RF: " + placeTracker.rightFrontEncoder.getRaw());
+//
+//        // CHANGE } else if (distance + 70 > placeTracker.getLinearPIDSource().pidGet()) {
+//        if (!lift.calibrate()) {
+//            teleopDrive.setXYRot(0, 0, 0);
+//            time = System.currentTimeMillis();
+//        } else if (time + 800 > System.currentTimeMillis()) {
+//            teleopDrive.setXYRot(0, 0, 0);
+//            lift.set(1);
+//            angle = placeTracker.getRot();
+//        } else if (angle - 75 < placeTracker.getRot() && !disable) {
+//            teleopDrive.setXYRot(0, 0, 0.37);
+//            lift.set(0);
+//        } else if (distance + (70 * encTicksPerInch) > placeTracker.leftFrontEncoder.getRaw()) {
+//            // if we change the 23, I'd say go to 1.75 * 23 = 40
+//            teleopDrive.setXYRot(0, -0.5, 0);
+//            lift.set(0);
+//            disable = true;
+//            System.out.println("LB: " + placeTracker.leftBackEncoder.getRaw()
+//                    + " RB: " + placeTracker.rightBackEncoder.getRaw()
+//                    + " LF: " + placeTracker.leftFrontEncoder.getRaw()
+//                    + " RF: " + placeTracker.rightFrontEncoder.getRaw());
+//        } else {
+//            teleopDrive.setXYRot(0, 0, 0);
+//        }
+
+        switch (stage) {
+            case 0:
+                if (!lift.calibrate()) {
+                    teleopDrive.setXYRot(0, 0, 0);
+                    time = System.currentTimeMillis();
+                } else {
+                    stage = 1;
+                }
+                break;
+            case 1:
+                if (time + 800 > System.currentTimeMillis()) {
+                    teleopDrive.setXYRot(0, 0, 0);
+                    lift.set(1);
+                    angle = placeTracker.getRot();
+                } else {
+                    stage = 2;
+                }
+                break;
+            case 2:
+                if (angle - 75 < placeTracker.getRot()) {
+                    teleopDrive.setXYRot(0, 0, 0.37);
+                    lift.set(0);
+                } else {
+                    stage = 3;
+                    distance = placeTracker.leftFrontEncoder.getRaw();
+                }
+                break;
+            case 3:
+                if (distance + (375 * encTicksPerInch) > placeTracker.leftFrontEncoder.getRaw()) {
+                    // if we change the 23, I'd say go to 1.75 * 23 = 40
+                    teleopDrive.setXYRot(0, -0.5, 0);
+                    lift.set(0);
+                    System.out.println("LB: " + placeTracker.leftBackEncoder.getRaw()
+                            + " RB: " + placeTracker.rightBackEncoder.getRaw()
+                            + " LF: " + placeTracker.leftFrontEncoder.getRaw()
+                            + " RF: " + placeTracker.rightFrontEncoder.getRaw());
+                } else {
+                    stage = 4;
+                }
+                break;
+            case 4:
+                teleopDrive.setXYRot(0, 0, 0);
+                break;
         }
     }
-    
+
     @Override
     public void teleopInit() {
         leds.activateTeleop();
@@ -126,7 +193,7 @@ public class Uri extends IterativeRobot {
         if (keyMap.getSlowButton()) {
             gear = .3;
         }
-        
+
         teleopDrive.setXYRot(-keyMap.getXDriveAxis() * gear, -keyMap.getYDriveAxis() * gear,
                 keyMap.getRotDriveAxis() * gear);
 
@@ -139,6 +206,12 @@ public class Uri extends IterativeRobot {
 
         if (keyMap.getToggleLiftFallback()) {
             lift.togglePIDEnabled();
+        }
+        
+        if (keyMap.getForceCalibrationButton()) {
+            if (!lift.isCalibrated()) {
+                lift.forceCalibrate();
+            } 
         }
 
         ///////////////////////////////
@@ -174,6 +247,25 @@ public class Uri extends IterativeRobot {
 
     @Override
     public void disabledPeriodic() {
-
+        if (keyMap.getNoAutonButton()) {
+            autonType = AutonType.NONE;
+            startAutonConfirmTime = System.currentTimeMillis();
+        }
+        
+        if (keyMap.getYellowToteAutonButton()) {
+            autonType = AutonType.YELLOW_TOTE;
+            startAutonConfirmTime = System.currentTimeMillis();
+        }
+        
+        if (keyMap.getLandfillAutonButton()) {
+            autonType = AutonType.LANDFILL;
+            startAutonConfirmTime = System.currentTimeMillis();
+        }
+        
+        if (startAutonConfirmTime + 1000 > System.currentTimeMillis()) {
+            keyMap.confirmAuton();
+        } else {
+            keyMap.stopConfirmAuton();
+        }
     }
 }

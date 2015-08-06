@@ -4,6 +4,7 @@ import com.coderedrobotics.libs.HID.HID;
 import com.coderedrobotics.libs.HID.HID.Axis;
 import com.coderedrobotics.libs.HID.HID.Button;
 import com.coderedrobotics.libs.HID.LogitechF310;
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  *
@@ -35,6 +36,12 @@ public class KeyMap {
     private final Button extendButton = LogitechF310.A;
     private final Button retractButton = LogitechF310.B;
     private final Button toggleLiftFallbackButton = LogitechF310.BACK;
+    private final Button forceCalibrationButton = LogitechF310.START;
+    
+    // CONTROLLER 0 - DISABLED PERIODIC AUTONOMOUS CHOOSER
+    private final Button noAutonButton = LogitechF310.B;
+    private final Button yellowToteAutonButton = LogitechF310.A;
+    private final Button landfillAutonButton = LogitechF310.X;
 
     // BUTTON STATES
     private final HID.ButtonState reverseDriveButtonState = HID.newButtonState();
@@ -143,7 +150,33 @@ public class KeyMap {
     public boolean getToggleLiftFallback() {
         return getHID(gamepad2).buttonPressed(toggleLiftFallbackButton, liftFallbackButtonState);
     }
+    
+    public boolean getNoAutonButton() {
+        return getHID(gamepad1).button(noAutonButton);
+    }
+    
+    public boolean getYellowToteAutonButton() {
+        return getHID(gamepad1).button(yellowToteAutonButton);
+    }
+    
+    public boolean getLandfillAutonButton() {
+        return getHID(gamepad1).button(landfillAutonButton);
+    }
+    
+    public void confirmAuton() {
+        getHID(gamepad1).setRumble(Joystick.RumbleType.kLeftRumble, 1);
+        getHID(gamepad1).setRumble(Joystick.RumbleType.kRightRumble, 1);
+    }
+    
+    public void stopConfirmAuton() {
+        getHID(gamepad1).setRumble(Joystick.RumbleType.kLeftRumble, 0);
+        getHID(gamepad1).setRumble(Joystick.RumbleType.kRightRumble, 0);
+    }
 
+    public boolean getForceCalibrationButton() {
+        return getHID(gamepad2).button(forceCalibrationButton);
+    }
+    
     public boolean getp(){return getHID(gamepad2).buttonPressed(LogitechF310.DPAD_UP, p);}
     public boolean getpd(){return getHID(gamepad2).buttonPressed(LogitechF310.DPAD_DOWN, pd);}
     public boolean geti(){return getHID(gamepad2).buttonPressed(LogitechF310.STICK_LEFT_UP, i);}

@@ -99,6 +99,13 @@ public class Lift implements PIDOutput {
         if (!isCalibrated()) move(-1);
         return calibrated;
     }
+    
+    public void forceCalibrate() {
+        calibrated = true;
+        calibration = encoder.getRaw();
+        pid.setSetpoint(calibration);
+        pid.enable();
+    }
 
     @Override
     public void pidWrite(double output) {
