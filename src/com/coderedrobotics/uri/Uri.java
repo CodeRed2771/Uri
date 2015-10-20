@@ -14,6 +14,7 @@ import com.coderedrobotics.uri.statics.Calibration;
 import com.coderedrobotics.uri.statics.KeyMap;
 import com.coderedrobotics.uri.statics.Wiring;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import static com.coderedrobotics.libs.ControlsBoxLEDs.*;
 
 /**
  *
@@ -92,9 +93,51 @@ public class Uri extends IterativeRobot {
 //        stringpot = new VirtualizableAnalogInput(Wiring.EXTENDER_STRING_POT);
     }
 
+    private int colorcounter = 0;
+    private long lastcolortime = 0;
     @Override
     public void autonomousInit() {
-        leds.activateAutonomous();
+        lastcolortime = System.currentTimeMillis();
+    }
+
+    @Override
+    public void autonomousPeriodic() {
+        if (System.currentTimeMillis() - 1000 > lastcolortime) {
+          lastcolortime = System.currentTimeMillis();
+          colorcounter++;
+          if (colorcounter == 7) {
+            colorcounter = 0;
+          }
+        }
+        switch (colorcounter) {
+          case 0:
+            leds.setColor(Color.RED);
+            break;
+          case 1:
+            leds.setColor(Color.GREEN);
+            break;
+          case 2:
+            leds.setColor(Color.WHITE);
+            break;
+          case 3:
+            leds.setColor(Color.YELLOW);
+            break;
+          case 4:
+            leds.setColor(Color.BLUE);
+            break;
+          case 5:
+            leds.setColor(Color.MAGENTA);
+            break;
+          case 6:
+            leds.setColor(Color.CYAN);
+            break;
+        }
+    }
+
+/* normal code:
+    @Override
+    public void autonomousInit() {
+        leds.activateAutonomous;
         // CHANGE distance = placeTracker.getLinearPIDSource().pidGet();
         distance = placeTracker.leftFrontEncoder.getRaw();
         angle = placeTracker.getRot();
@@ -180,7 +223,7 @@ public class Uri extends IterativeRobot {
                 break;
         }
     }
-
+*/
     @Override
     public void teleopInit() {
         leds.activateTeleop();
@@ -203,15 +246,25 @@ public class Uri extends IterativeRobot {
 
         ///////////////////////////////
         lift.set(keyMap.getLiftAxis());
+        if (keyMap.getLiftAxis() > 0) {
+          leds.setColor(Color.YELLOW);
+          leds.setHz(2);
+        } else if (keyMap.getLiftAxis() < 0) {
+          leds.setColor(Color.BLUE);
+          leds.setHz(2);
+        } else {
+          leds.setColor(Color.RED);
+        }
+        leds.blinkTick();
 
         if (keyMap.getToggleLiftFallback()) {
             lift.togglePIDEnabled();
         }
-        
+
         if (keyMap.getForceCalibrationButton()) {
             if (!lift.isCalibrated()) {
                 lift.forceCalibrate();
-            } 
+            }
         }
 
         ///////////////////////////////
@@ -251,17 +304,17 @@ public class Uri extends IterativeRobot {
             autonType = AutonType.NONE;
             startAutonConfirmTime = System.currentTimeMillis();
         }
-        
+
         if (keyMap.getYellowToteAutonButton()) {
             autonType = AutonType.YELLOW_TOTE;
             startAutonConfirmTime = System.currentTimeMillis();
         }
-        
+
         if (keyMap.getLandfillAutonButton()) {
             autonType = AutonType.LANDFILL;
             startAutonConfirmTime = System.currentTimeMillis();
         }
-        
+
         if (startAutonConfirmTime + 1000 > System.currentTimeMillis()) {
             keyMap.confirmAuton();
         } else {
